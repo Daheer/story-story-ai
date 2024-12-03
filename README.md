@@ -1,73 +1,62 @@
-# modular-code-gen
+# Story-Story: Once upon a time, Time-Time!
 
-## Setup
+![](thumbnail.png)
 
-- Install OpenAI Version 0.28.1, this is required by Gorilla LLM
-```bash
-pip install openai==0.28.1 -t lib_v0.28.1
-```
+**Story-Story** is an engaging storytelling app designed for children. It takes the rich histories of Nigerian and African figures and turns them into child-friendly, factual stories. With vibrant illustrations and captivating narratives, Story-Story aims to make history come alive for young minds. Stories are generated using an LLM agentic workflow, see demo [here](https://naija-heroes.vercel.app).
 
-- Add OpenAI API key to environment
-```bash
-export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"
-```
+---
 
-## Workflow Sketch
+## 🌟 AI Agents Orchestration
+
+**Story-Story** uses an ensemble of AI LLM agents implemented with **LangGraph** to generate entire 10-page stories about a hero from a single input (the hero's name).
+Below is the architecture
 
 ![](arch.png)
 
+## Agents Breakdown
+
+1. Planner Agent
+   - Responsible for generating the outline / chapter titles for the story
+   - **input**: `historical_figure`
+   - **output**: `chapter_title`
+   - model: GPT-4o
+2. Storyteller Agent (GPT-4o)
+   - Responsible for generating accurate content for the chapter
+   - **input**: `historical_figure` `chapter_title`
+   - **output**: `chapter_content`
+   - model: GPT-4o
+3. Illustrator Agent
+   - Responsible for generating prompts that will be used to generate images
+   - **input**: `chapter_title` `historical_figure`
+   - **output**: `prompt`
+   - model: GPT-4o
+4. Image Creator
+   - Responsible for generating the illustrations given a prompt
+   - **input**: `historical_figure` `prompt`
+   - **outputs**: `image`
+   - model: Flux.1 Schnell
+5. Publisher Agent
+   - Responsible for verifying validity of outputs, making sure it's okay for child consumption
+   - **inputs**: `historical_figure` `chapter_content` `image`
+   - **outputs**: `score`
+   - model: GPT-4v
+
+---
+
+## 🚀 Getting Started
+- Install requirements
+```bash
+pip install -r requirements.txt
+```
+
+- Add OpenAI API Key to environment
+```bash
+export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"  
+```
 
 ## Run app
-
->For the CLI
 ```bash
-python main.py
+python main.py --historical_figure "Ahmadu Bello"
 ```
-
->For the GUI
-```bash
-python ui.py
-```
-
-## Steps to Implement a New Agent [🔗 file](workflows/workflow.py)
-
-### 1. Define Entry Point Function
-- **Task:** Define an entry point function `execute_step_for_{}` for the {} team, similar to `execute_step_for_database`.
-- **Reference:** Line 261.
-
-### 2. Define `executeAction_for_{}_team`
-- **Task:** Define the function `executeAction_for_{}_team` to execute the actions outlined by the {} agent, similar to `executeAction_for_database_team`.
-- **Reference:** Line 284.
-
-### 3. Implement `re_execute_step_for_{}` Function
-- **Task:** Implement `re_execute_step_for_{}` similar to `re_execute_step_for_database`. This function will call the `re{}_agent` to verify the task status and decide whether to redo or not.
-- **Reference:** Line 307.
-
-### 4. Implement `validationFor{}Team` Function
-- **Task:** Implement `validationFor{}Team`, similar to `validationForDatabaseTeam`.
-- **Reference:** Line 331.
-
-### 5. Edit the Planner Node
-- **Task:** Edit the `planner node` in line 62 to add the new agent.
-- **Action:** Modify the `if` block to include the new agent.
-
-### 6. Edit `executeStage`
-- **Task:** Edit the `executeStage` function in line 116 to include the new agent.
-  - **Actions:** 
-    - Update the `Literal[]`.
-    - Modify the `if` block to accommodate the new agent.
-
-### 7. Edit `colabEnd` Function
-- **Task:** Edit the `colabEnd` function in line 239 to include the new agent.
-- **Action:** Add a corresponding `if` statement.
-
-### 8. Connect Functions with LangGraph Tags
-- **Task:** Connect the created functions to their LangGraph tags by creating `nodes` using the `add_node` method.
-
-### 9. Create Connections Between Functions
-- **Task:** Create connections between the functions by adding `edges` using `add_edge` or `add_conditional_edge`.
-
-### 10. Edit `replan_step` Function
-- **Task:** Edit the `replan_step` function in line 202 to include the new agent.
-- **Action:** Add the necessary `if` statement.
+This will create the `10-page` content including illustrations about Ahmadu Bello and upload to a `Supabase` database
 
