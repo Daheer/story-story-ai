@@ -6,14 +6,15 @@
 
 ---
 
-## 🌟 AI Agents Orchestration
+## 🏗️ Architecture
 
 **Story-Story** uses an ensemble of AI LLM agents implemented with **LangGraph** to generate entire 10-page stories about a hero from a single input (the hero's name).
+
 Below is the architecture
 
 ![](arch.png)
 
-## Agents Breakdown
+## 🤖 Agents Breakdown
 
 1. Planner Agent
    - Responsible for generating the outline / chapter titles for the story
@@ -54,7 +55,7 @@ pip install -r requirements.txt
 export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"  
 ```
 
-## Run app
+## 🖥️ Run app
 ```bash
 python main.py --historical_figure "Ahmadu Bello"
 ```
