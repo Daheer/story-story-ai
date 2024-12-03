@@ -61,9 +61,8 @@ def PublisherModel(inputs: dict) -> str | list[str | dict[Any, Any]]:
             )
         ]
     )
-    return msg.content
+    return msg
 
 parser = JsonOutputParser(pydantic_object=PublisherAgentStructure)
 
 PublisherAgent = load_image_chain | PublisherModel
-PublisherAgent = PublisherAgent#.with_structured_output(PublisherAgentStructure)

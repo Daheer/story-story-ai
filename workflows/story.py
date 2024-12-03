@@ -63,7 +63,7 @@ async def publisher_node(state: StoryState):
       "chapter": chapter,
       "historical_figure": state['historical_figure']
       })
-      publisher_response = publisher_response['publish']
+      publisher_response = publisher_response.publish
     else:
       publisher_response = False
     publish.append(publisher_response)
