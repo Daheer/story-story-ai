@@ -25,7 +25,7 @@ load_image_chain = TransformChain(
 )
 
 class PublisherAgentStructure(BaseModel):
-    published: bool = Field(
+    publish: bool = Field(
         ...,
         example=True,
         description="Set to True if the story is ready for publication and False otherwise.",
