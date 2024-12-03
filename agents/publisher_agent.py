@@ -36,7 +36,8 @@ def PublisherModel(inputs: dict) -> str | list[str | dict[Any, Any]]:
         temperature=0.5,
         model="gpt-4o",
         max_tokens=1024,
-    )
+    ).with_structured_output(PublisherAgentStructure)
+
     msg = model.invoke(
         [
             HumanMessage(
@@ -65,4 +66,4 @@ def PublisherModel(inputs: dict) -> str | list[str | dict[Any, Any]]:
 parser = JsonOutputParser(pydantic_object=PublisherAgentStructure)
 
 PublisherAgent = load_image_chain | PublisherModel
-PublisherAgent = PublisherAgent.with_structured_output(PublisherAgentStructure)
+PublisherAgent = PublisherAgent#.with_structured_output(PublisherAgentStructure)
