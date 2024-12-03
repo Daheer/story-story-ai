@@ -22,6 +22,8 @@ class ImageGenerationTool(BaseTool):
 
   args_schema: Type[BaseModel] = ImageGenerationInput 
 
+  client: Any = None
+
   def __init__(
       self,
       **kwargs: Any
