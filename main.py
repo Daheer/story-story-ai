@@ -1,9 +1,9 @@
+import argparse
 import asyncio
 from workflows.story import app
 
-async def run_app():
-    
-    inputs = {"historical_figure": "Ahmadu Bello"}
+async def run_app(historical_figure):
+    inputs = {"historical_figure": historical_figure}
     config = {"recursion_limit": 50}
     
     logs = []
@@ -16,7 +16,16 @@ async def run_app():
         print(log)
 
 def main():
-    asyncio.run(run_app())
+    parser = argparse.ArgumentParser(description="Run the Story app for a historical figure.")
+    parser.add_argument(
+        "--historical_figure", 
+        type=str, 
+        required=True, 
+        help="Name of the historical figure to generate a story for."
+    )
+    args = parser.parse_args()
+    
+    asyncio.run(run_app(args.historical_figure))
 
 if __name__ == "__main__":
     main()
