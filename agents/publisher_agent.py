@@ -42,9 +42,9 @@ def PublisherModel(inputs: dict) -> str | list[str | dict[Any, Any]]:
             HumanMessage(
                 content=[
                     {"type": "text", "text": f"""
-                    You are a publisher agent, you have a great historical background knowledge of Nigerian prominent figures. You have been hired by a children\'s story company. Your role is to verify the correctness, coherence, and readiness of a chapter of a story generated with illustrations.
+                    You are a publisher agent, you have a great historical background knowledge of Nigerian prominent figures. You have been hired by a children\'s story company. Your role is to verify the correctness, coherence between the illustration image and the chapter. Also you verify that it is children friendly.
 
-                    Your response should be a boolean, True if the story segment is ready for publication and False otherwise
+                    Your response should be a boolean, True if the chapter is satisfactory and False otherwise
 
                     Chapter Text: {inputs['chapter']}
                     Historical figure: {inputs['historical_figure']}
@@ -64,4 +64,4 @@ def PublisherModel(inputs: dict) -> str | list[str | dict[Any, Any]]:
 
 parser = JsonOutputParser(pydantic_object=PublisherAgentStructure)
 
-PublisherAgent = load_image_chain | PublisherModel | parser
+PublisherAgent = load_image_chain | PublisherModel.with_structured_output(PublisherAgentStructure)
