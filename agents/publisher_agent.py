@@ -46,8 +46,7 @@ def PublisherModel(inputs: dict) -> str | list[str | dict[Any, Any]]:
 
                     Your response should be a boolean, True if the story segment is ready for publication and False otherwise
 
-                    Chapter: {inputs['chapter']}
-                    Image: {inputs['image_path']}
+                    Chapter Text: {inputs['chapter']}
                     Historical figure: {inputs['historical_figure']}
                     """},
                     {"type": "text", "text": parser.get_format_instructions()},

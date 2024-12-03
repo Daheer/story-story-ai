@@ -57,12 +57,15 @@ async def publisher_node(state: StoryState):
   historical_figure = state['historical_figure']
   publish = []
   for chapter, image in zip(chapters, images):
-    publisher_response = await PublisherAgent.ainvoke({
+    if image is not None:
+      publisher_response = await PublisherAgent.ainvoke({
       "image_path": image,
       "chapter": chapter,
       "historical_figure": state['historical_figure']
-    })
-    publisher_response = publisher_response['publish']
+      })
+      publisher_response = publisher_response['publish']
+    else:
+      publisher_response = False
     publish.append(publisher_response)
   print(f"--- [Story Score] = [{publish.count(True)/len(publish)}%] ----")
   for i, (chapter, image, prompt) in enumerate(zip(chapters, images, prompts)):
