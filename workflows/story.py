@@ -82,7 +82,7 @@ async def publisher_node(state: StoryState):
       "chapter": chapter,
       "illustration_url": illustration_url,
       "prompt": prompt,
-    })
+    }).execute()
 
   return {
     "publish": publish
