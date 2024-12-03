@@ -11,6 +11,8 @@ from agents.publisher_agent import PublisherAgent
 
 from tools.image_generator import image_generator
 
+from utils import supabase
+
 async def planner_node(state: StoryState):
 
   print("--- [Planner Agent] ---")
@@ -51,6 +53,8 @@ async def publisher_node(state: StoryState):
   print("--- [Publisher Agent] ---")
   chapters = state['chapters']
   images = state['images']
+  prompts = state['prompts']
+  historical_figure = state['historical_figure']
   publish = []
   for chapter, image in zip(chapters, images):
     publisher_response = await PublisherAgent.ainvoke({
@@ -60,12 +64,25 @@ async def publisher_node(state: StoryState):
     })
     publisher_response = publisher_response['publish']
     publish.append(publisher_response)
-  print("Final Publication", publish)
-  breakpoint()
-  return {
-    "publish": publish
-  }
-
+  print(f"--- [Story Score] = [{publish.count(True)/len(publish)}%] ----")
+  for i, (chapter, image, prompt) in enumerate(zip(chapters, images, prompts)):
+    with open(image, 'rb') as f:
+      upload_response = supabase.storage.from_("illustrations").upload(
+          file=f,
+          path=f"public/{historical_figure.replace(' ', '-')}/image-{i+1}.png",
+          file_options={"cache-control": "3600", "upsert": "true"},
+      )
+    illustration_url = supabase.storage.from_("illustrations").get_public_url(upload_response.path)
+    supabase.table("story_pages").insert({
+      "page_number": i+1,
+      "historical_figure": historical_figure,
+      "chapter": chapter,
+      "illustration_url": illustration_url,
+      "prompt": prompt,
+    })
+  state['publish'] = publish
+  return should_end
+  
 def generate_image(state: StoryState):
   print("--- [Image Creator] ---")
   images = []

@@ -35,13 +35,13 @@ class ImageGenerationTool(BaseTool):
             "Gradio Client is not installed. "
             "Please install it with `pip install gradio_client`"
         )
+        
+    client = Client("ChristianHappy/FLUX.1-schnell")
 
   def _generate_image(self, prompt="Story-Story: Once upon a time, Time-Time!"):
 
     try:
-
-        from gradio_client import Client
-        client = Client("ChristianHappy/FLUX.1-schnell")
+        
         result = client.predict(
                 prompt=prompt,
                 seed=0,
