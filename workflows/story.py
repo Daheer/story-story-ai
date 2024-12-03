@@ -67,7 +67,7 @@ async def publisher_node(state: StoryState):
     else:
       publisher_response = False
     publish.append(publisher_response)
-  print(f"--- [Story Score] = [{publish.count(True)/len(publish)}%] ----")
+  print(f"--- [Story Score] = [{100*(publish.count(True)/len(publish))}%] ----")
   for i, (chapter, image, prompt) in enumerate(zip(chapters, images, prompts)):
     with open(image, 'rb') as f:
       upload_response = supabase.storage.from_("illustrations").upload(
@@ -83,8 +83,10 @@ async def publisher_node(state: StoryState):
       "illustration_url": illustration_url,
       "prompt": prompt,
     })
-  state['publish'] = publish
-  return should_end
+
+  return {
+    "publish": publish
+  }
   
 def generate_image(state: StoryState):
   print("--- [Image Creator] ---")
@@ -99,7 +101,7 @@ def generate_image(state: StoryState):
 
 def should_end(state: StoryState) -> Literal["planner", "__end__"]:
     print("--- [End] ---")
-    if state["publish"]:
+    if state["publish"].count(True) >= 5:
       return "__end__"
     else:
       return "planner"
