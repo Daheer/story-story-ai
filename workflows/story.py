@@ -84,7 +84,6 @@ def publisher_node(state: StoryState):
             publisher_response = False
         publish.append(publisher_response)
     print(f"--- [Story Score] = [{100*(publish.count(True)/len(publish))}%] ----")
-    supabase.table("stories").upsert({"historical_figure": historical_figure}).execute()
     for i, (chapter, image, prompt) in enumerate(zip(chapters, images, prompts)):
         with open(image, "rb") as f:
             upload_response = supabase.storage.from_("illustrations").upload(
