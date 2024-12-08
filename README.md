@@ -50,9 +50,9 @@ Below is the architecture
 pip install -r requirements.txt
 ```
 
-- Add OpenAI API Key to environment
+- Add Google Gemini API Key to environment
 ```bash
-export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"  
+export GOOGLE_API_KEY="sk-xxxxxxxxxxxxxxxx"  
 ```
 
 ## 🖥️ Run app
