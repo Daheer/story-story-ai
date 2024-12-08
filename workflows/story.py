@@ -16,6 +16,9 @@ import time
 
 
 async def planner_node(state: StoryState):
+
+    response = supabase.table("stories").select("*").eq("historical_figure", state['historical_figure']).execute()
+
     if response.data:
         print("Value already exists in the database.")
         print("Exiting Story-Story AI")
