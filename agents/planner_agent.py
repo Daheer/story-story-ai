@@ -1,23 +1,21 @@
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_core.pydantic_v1 import BaseModel, Field
-from typing import Union
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 PlannerAgentStructure = {
     "title": "OutlineGenerate",
-    "description": "Generate a list of ten chapter titles in chronological order for the given historical figure\'s biography",
+    "description": "Generate a list of ten chapter titles in chronological order for the given historical figure's biography",
     "type": "object",
     "properties": {
         "titles": {
             "type": "array",
-            "description": "An array of ten items where each element is an appropriate and significant chapter in the historical figure\'s biography",
+            "description": "An array of ten items where each element is an appropriate and significant chapter in the historical figure's biography",
             "items": {
                 "type": "string",
                 "description": "chapter title",
-            }
+            },
         }
     },
-    "required": ["titles"]
+    "required": ["titles"],
 }
 
 PlannerPrompt = ChatPromptTemplate.from_template(
@@ -30,6 +28,10 @@ PlannerPrompt = ChatPromptTemplate.from_template(
     """
 )
 
-PlannerAgent = PlannerPrompt | ChatOpenAI(
-    model="gpt-4o", temperature=0
+PlannerAgent = PlannerPrompt | ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=1,
 ).with_structured_output(PlannerAgentStructure)

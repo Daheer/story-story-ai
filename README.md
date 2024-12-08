@@ -20,17 +20,17 @@ Below is the architecture
    - Responsible for generating the outline / chapter titles for the story
    - **input**: `historical_figure`
    - **output**: `chapter_title`
-   - model: GPT-4o
-2. Storyteller Agent (GPT-4o)
+   - model: Gemini-1.5-Flash
+2. Storyteller Agent (Gemini-1.5-Flash)
    - Responsible for generating accurate content for the chapter
    - **input**: `historical_figure` `chapter_title`
    - **output**: `chapter_content`
-   - model: GPT-4o
+   - model: Gemini-1.5-Flash
 3. Illustrator Agent
    - Responsible for generating prompts that will be used to generate images
    - **input**: `chapter_title` `historical_figure`
    - **output**: `prompt`
-   - model: GPT-4o
+   - model: Gemini-1.5-Flash
 4. Image Creator
    - Responsible for generating the illustrations given a prompt
    - **input**: `historical_figure` `prompt`
@@ -40,7 +40,7 @@ Below is the architecture
    - Responsible for verifying validity of outputs, making sure it's okay for child consumption
    - **inputs**: `historical_figure` `chapter_content` `image`
    - **outputs**: `score`
-   - model: GPT-4v
+   - model: Gemini-1.5-Flash
 
 ---
 

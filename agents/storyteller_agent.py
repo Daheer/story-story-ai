@@ -1,23 +1,21 @@
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_core.pydantic_v1 import BaseModel, Field
-from typing import Union
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 StoryTellerAgentStructure = {
     "title": "StoryTelling",
-    "description": "Generate a ten-item list where each item is the page content in chronological order for the given chapter title in the historical figure\'s biography",
+    "description": "Generate a ten-item list where each item is the page content in chronological order for the given chapter title in the historical figure's biography",
     "type": "object",
     "properties": {
         "chapters": {
             "type": "array",
-            "description": "An array of ten items where each element is the appropriate and coherent page content corresponding to the chapter title in the historical figure\'s biography",
+            "description": "An array of ten items where each element is the appropriate and coherent page content corresponding to the chapter title in the historical figure's biography",
             "items": {
                 "type": "string",
-                "description": "chapter\'s story",
-            }
+                "description": "chapter's story",
+            },
         }
     },
-    "required": ["chapters"]
+    "required": ["chapters"],
 }
 
 StoryTellerPrompt = ChatPromptTemplate.from_template(
@@ -30,6 +28,10 @@ StoryTellerPrompt = ChatPromptTemplate.from_template(
     """
 )
 
-StoryTellerAgent = StoryTellerPrompt | ChatOpenAI(
-    model="gpt-4o", temperature=0
+StoryTellerAgent = StoryTellerPrompt | ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=1,
 ).with_structured_output(StoryTellerAgentStructure)

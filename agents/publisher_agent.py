@@ -1,68 +1,70 @@
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_core.pydantic_v1 import BaseModel, Field
-from typing import Union, Any
+"""
+Install an additional SDK for JSON schema support Google AI Python SDK
 
-import base64
-from langchain.chains import TransformChain
-from langchain_core.messages import HumanMessage
-from langchain_openai import ChatOpenAI
-from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.exceptions import OutputParserException
+$ pip install google.ai.generativelanguage
+"""
 
-def load_image(inputs: dict) -> dict:
-    image_path = inputs["image_path"]
-    
-    def encode_image(image_path):
-        with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode("utf-8")
-    
-    image_base64 = encode_image(image_path)
-    return {"image": image_base64}
+import os
+import google.generativeai as genai
+from google.ai.generativelanguage_v1beta.types import content
+import json
 
-load_image_chain = TransformChain(
-    input_variables=["image_path"], output_variables=["image"], transform=load_image
-)
 
-class PublisherAgentStructure(BaseModel):
-    publish: bool = Field(
-        ...,
-        example=True,
-        description="Set to True if the story is ready for publication and False otherwise.",
-    )
+def upload_to_gemini(path, mime_type=None):
+    file = genai.upload_file(path, mime_type=mime_type)
+    print(f"Uploaded file '{file.display_name}' as: {file.uri}")
+    return file
 
-def PublisherModel(inputs: dict) -> str | list[str | dict[Any, Any]]:
-    model: ChatOpenAI = ChatOpenAI(
-        temperature=0.5,
-        model="gpt-4o",
-        max_tokens=1024,
-    ).with_structured_output(PublisherAgentStructure)
 
-    msg = model.invoke(
-        [
-            HumanMessage(
-                content=[
-                    {"type": "text", "text": f"""
-                    You are a publisher agent, you have a great historical background knowledge of Nigerian prominent figures. You have been hired by a children\'s story company. Your role is to verify the correctness, coherence between the illustration image and the chapter. Also you verify that it is children friendly.
+# Create the model
+generation_config = {
+    "temperature": 0,
+    "top_p": 0.95,
+    "top_k": 40,
+    "max_output_tokens": 8192,
+    "response_schema": content.Schema(
+        type=content.Type.OBJECT,
+        properties={
+            "publish": content.Schema(
+                type=content.Type.BOOLEAN,
+            ),
+        },
+    ),
+    "response_mime_type": "application/json",
+}
 
-                    Your response should be a boolean, True if the chapter is satisfactory and False otherwise
 
-                    Chapter Text: {inputs['chapter']}
-                    Historical figure: {inputs['historical_figure']}
-                    """},
-                    {"type": "text", "text": parser.get_format_instructions()},
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/jpeg;base64,{inputs['image']}"
-                        },
-                    },
-                ]
-            )
+class PublisherAgentClass:
+    def __init__(self, model_name) -> None:
+        genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+        self.files = []
+        self.model = genai.GenerativeModel(
+            model_name=model_name,
+            generation_config=generation_config,
+            system_instruction="You are a publisher agent, you have a great historical background knowledge of Nigerian prominent figures. You have been hired by a children\\'s story company. Your role is to verify the correctness, coherence between the illustration image and the chapter. Also you verify that it is children friendly.\n\nYour response should be a boolean, True if the chapter is satisfactory and False otherwise",
+        )
+
+    def invoke(self, chapter, image, historical_figure):
+        self.files = [
+            upload_to_gemini(image, mime_type="image/webp"),
         ]
-    )
-    return msg
+        chat_session = self.model.start_chat(
+            history=[
+                {
+                    "role": "user",
+                    "parts": [
+                        self.files[0],
+                    ],
+                },
+            ]
+        )
+        response = chat_session.send_message(
+            f"""
+            Chapter Text: {chapter} \n
+            Historical Figure: {historical_figure}
+            """
+        )
+        return json.loads(response.text)
 
-parser = JsonOutputParser(pydantic_object=PublisherAgentStructure)
 
-PublisherAgent = load_image_chain | PublisherModel
+PublisherAgent = PublisherAgentClass(model_name="gemini-1.5-flash")

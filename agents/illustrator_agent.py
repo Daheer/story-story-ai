@@ -1,11 +1,9 @@
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_core.pydantic_v1 import BaseModel, Field
-from typing import Union
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 IllustratorAgentStructure = {
     "title": "Illustration",
-    "description": "Generate an appropriate prompt to generate an image for the given the chapter in the historical figure\'s biography",
+    "description": "Generate an appropriate prompt to generate an image for the given the chapter in the historical figure's biography",
     "type": "object",
     "properties": {
         "prompt": {
@@ -13,7 +11,7 @@ IllustratorAgentStructure = {
             "description": "Detailed prompt that will be sent to an image-generator",
         }
     },
-    "required": ["prompt"]
+    "required": ["prompt"],
 }
 
 IllustratorPrompt = ChatPromptTemplate.from_template(
@@ -28,6 +26,10 @@ IllustratorPrompt = ChatPromptTemplate.from_template(
     """
 )
 
-IllustratorAgent = IllustratorPrompt | ChatOpenAI(
-    model="gpt-4o", temperature=0
+IllustratorAgent = IllustratorPrompt | ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=1,
 ).with_structured_output(IllustratorAgentStructure)
