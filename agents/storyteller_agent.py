@@ -11,7 +11,7 @@ StoryTellerAgentStructure = {
             "description": "An array of ten items where each element is the appropriate and coherent page content corresponding to the chapter title in the historical figure's biography",
             "items": {
                 "type": "string",
-                "description": "chapter's story",
+                "description": "chapter\'s story",
             },
         }
     },
@@ -24,7 +24,7 @@ StoryTellerPrompt = ChatPromptTemplate.from_template(
 
     Your response should be a list containing the complete story, each item being the corresponding chapter content for a given chapter title.
 
-    Chapter titles \n {titles}
+    Chapter titles [ {titles} ]
     """
 )
 
