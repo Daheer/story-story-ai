@@ -29,7 +29,7 @@ StoryTellerPrompt = ChatPromptTemplate.from_template(
 )
 
 StoryTellerAgent = StoryTellerPrompt | ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-1.5-pro",
     temperature=0,
     max_tokens=None,
     timeout=None,
