@@ -16,7 +16,13 @@ import time
 
 
 async def planner_node(state: StoryState):
-
+    if response.data:
+        print("Value already exists in the database.")
+        print("Exiting Story-Story AI")
+        exit()
+    else:
+        supabase.table("stories").insert({"historical_figure": state['historical_figure']}).execute()
+    
     print("--- [Planner Agent] ---")
     time.sleep(30)
     planner_response = await PlannerAgent.ainvoke(
