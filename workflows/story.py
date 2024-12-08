@@ -38,7 +38,9 @@ async def planner_node(state: StoryState):
 async def storyteller_node(state: StoryState):
     print("--- [StoryTeller Agent] ---")
     time.sleep(30)
-    storyteller_response = await StoryTellerAgent.ainvoke({"titles": state["titles"]})
+    titles = state["titles"]
+    titles = ", ".join(titles)
+    storyteller_response = await StoryTellerAgent.ainvoke({"titles": titles})
     storyteller_response = storyteller_response[0]["args"]
     return {"chapters": storyteller_response["chapters"]}
 
