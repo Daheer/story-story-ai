@@ -10,3 +10,4 @@ langchainhub==0.1.20
 gradio_client
 supabase
 python-dotenv
+requests
