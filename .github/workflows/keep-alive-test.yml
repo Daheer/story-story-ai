@@ -1,0 +1,38 @@
+name: keep-alive-push
+
+on: push
+
+jobs:
+  query-supabase:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Query Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          python -c "
+          import os
+          from supabase import create_client, Client
+
+          url: str = os.environ.get('SUPABASE_URL')
+          key: str = os.environ.get('SUPABASE_SECRET_KEY')
+          supabase: Client = create_client(url, key)
+
+          data = supabase.table('story_pages').select('*').execute()
+          print(data)
+          "
