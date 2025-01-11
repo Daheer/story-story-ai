@@ -36,5 +36,5 @@ jobs:
           supabase: Client = create_client(url, key)
 
           data = supabase.table('story_pages').select('*').execute()
-          print(data)
+          
           "
