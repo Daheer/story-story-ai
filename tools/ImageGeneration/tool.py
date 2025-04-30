@@ -38,7 +38,7 @@ class ImageGenerationTool(BaseTool):
             "Please install it with `pip install gradio_client`"
         )
         
-    self.client = Client("ChristianHappy/FLUX.1-dev")
+    self.client = Client("black-forest-labs/FLUX.1-dev")
 
   def _generate_image(self, prompt="Story-Story: Once upon a time, Time-Time!"):
 
