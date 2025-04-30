@@ -55,6 +55,17 @@ pip install -r requirements.txt
 export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"  
 ```
 
+- Add Supabase credentials to environment
+```bash
+export SUPABASE_URL="https://your-project-url.supabase.co"
+export SUPABASE_KEY="your-supabase-key"
+```
+
+- Add Hugging Face token to environment
+```bash
+export HF_TOKEN="hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+```
+
 ## 🖥️ Run app
 ```bash
 python main.py --historical_figure "Ahmadu Bello"
