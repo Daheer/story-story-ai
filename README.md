@@ -35,7 +35,7 @@ Below is the architecture
    - Responsible for generating the illustrations given a prompt
    - **input**: `historical_figure` `prompt`
    - **outputs**: `image`
-   - model: Flux.1 Schnell
+   - model: Flux.1 Dev
 5. Publisher Agent
    - Responsible for verifying validity of outputs, making sure it's okay for child consumption
    - **inputs**: `historical_figure` `chapter_content` `image`
@@ -53,6 +53,17 @@ pip install -r requirements.txt
 - Add Google Gemini API Key to environment
 ```bash
 export GOOGLE_API_KEY="sk-xxxxxxxxxxxxxxxx"  
+```
+
+- Add Supabase credentials to environment
+```bash
+export SUPABASE_URL="https://your-project-url.supabase.co"
+export SUPABASE_KEY="your-supabase-key"
+```
+
+- Add Hugging Face token to environment
+```bash
+export HF_TOKEN="hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 ## 🖥️ Run app
