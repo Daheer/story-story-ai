@@ -12,7 +12,7 @@ class ImageGenerationTool(BaseTool):
 
   """
   Image Generation Tool
-  This tool uses FLUX.1 Schnell to generate images. It uses the HuggingFace Space API to interact with the model
+  This tool uses FLUX.1 Dev to generate images. It uses the HuggingFace Space API to interact with the model
   """
 
   name: str = "image_generation_tool"
@@ -38,7 +38,7 @@ class ImageGenerationTool(BaseTool):
             "Please install it with `pip install gradio_client`"
         )
         
-    self.client = Client("ChristianHappy/FLUX.1-schnell")
+    self.client = Client("ChristianHappy/FLUX.1-dev")
 
   def _generate_image(self, prompt="Story-Story: Once upon a time, Time-Time!"):
 
@@ -50,7 +50,7 @@ class ImageGenerationTool(BaseTool):
                 randomize_seed=True,
                 width=1024,
                 height=1024,
-                num_inference_steps=4,
+                num_inference_steps=12,
                 api_name="/infer"
         )
 
